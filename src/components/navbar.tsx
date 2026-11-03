@@ -10,9 +10,9 @@ import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { label: "Home", href: "/", active: true },
-  { label: "Destinations", href: "#destinations" },
+  { label: "Destinations", href: "/destinations" },
+  { label: "Add Destination", href: "/add-destination" },
   { label: "My Bookings", href: "#bookings" },
-  { label: "Admin", href: "#admin" },
 ];
 
 const accountLinks = [
