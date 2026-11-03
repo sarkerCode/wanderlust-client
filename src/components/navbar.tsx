@@ -12,12 +12,12 @@ const navLinks = [
   { label: "Home", href: "/", active: true },
   { label: "Destinations", href: "/destinations" },
   { label: "Add Destination", href: "/add-destination" },
-  { label: "My Bookings", href: "#bookings" },
+  { label: "My Bookings", href: "/my-bookings" },
 ];
 
 const accountLinks = [
-  { label: "Login", href: "#login" },
-  { label: "Sign Up", href: "#signup" },
+  { label: "Login", href: "/login" },
+  { label: "Sign Up", href: "/signup" },
 ];
 
 export function Navbar() {
