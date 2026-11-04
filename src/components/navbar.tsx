@@ -1,5 +1,14 @@
 "use client";
 
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,6 +16,7 @@ import { CircleUserRound, Menu, X } from "lucide-react";
 import { cn } from "cn";
 
 import { Button } from "@/components/ui/button";
+import { signOut, useSession } from "@/lib/auth-client";
 
 const navLinks = [
   { label: "Home", href: "/", active: true },
@@ -22,11 +32,21 @@ const accountLinks = [
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
+  const user = session?.user;
+  console.log(user);
+
+  const handleSignOutButton = () => {
+    signOut();
+  };
 
   return (
     <header className="w-full bg-white">
       <div className="mx-auto grid h-16 w-full max-w-[1600px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:px-6 lg:h-20 lg:px-10">
-        <nav aria-label="Main" className="col-start-1 hidden items-center gap-0.5 md:flex">
+        <nav
+          aria-label="Main"
+          className="col-start-1 hidden items-center gap-0.5 md:flex"
+        >
           {navLinks.map((link) => (
             <Button
               key={link.label}
@@ -63,21 +83,51 @@ export function Navbar() {
         <div className="col-start-3 flex items-center justify-end justify-self-end gap-5">
           <div className="hidden items-center gap-5 md:flex">
             <Link
-              href="#profile"
+              href="/profile"
               className="inline-flex items-center gap-1.5 text-[13px] font-medium text-neutral-700 transition-colors hover:text-brand lg:text-sm"
             >
               <CircleUserRound className="size-4" aria-hidden="true" />
               Profile
             </Link>
-            {accountLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="text-[13px] font-medium text-neutral-700 transition-colors hover:text-brand lg:text-sm"
-              >
-                {link.label}
-              </Link>
-            ))}
+
+            {user ? (
+              <Popover>
+                <PopoverTrigger
+                  render={
+                    <Avatar>
+                      <AvatarImage
+                        referrerPolicy="no-referrer"
+                        src={user?.image as string}
+                      />
+                      <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  }
+                />
+                <PopoverContent align="start">
+                  <PopoverHeader>
+                    <PopoverTitle>{user?.name}</PopoverTitle>
+                    <PopoverDescription>
+                      <p>{user?.email}</p>
+                    </PopoverDescription>
+                    <Button onClick={handleSignOutButton} variant="destructive">
+                      Sign Out
+                    </Button>
+                  </PopoverHeader>
+                </PopoverContent>
+              </Popover>
+            ) : (
+              <>
+                {accountLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className="text-[13px] font-medium text-neutral-700 transition-colors hover:text-brand lg:text-sm"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </>
+            )}
           </div>
 
           <Button
@@ -130,16 +180,45 @@ export function Navbar() {
               <CircleUserRound className="size-4" aria-hidden="true" />
               Profile
             </Link>
-            {accountLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm font-medium text-neutral-700"
-              >
-                {link.label}
-              </Link>
-            ))}
+
+            {user ? (
+              <Popover>
+                <PopoverTrigger
+                  render={
+                    <Avatar>
+                      <AvatarImage
+                        referrerPolicy="no-referrer"
+                        src={user?.image as string}
+                      />
+                      <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  }
+                />
+                <PopoverContent align="start">
+                  <PopoverHeader>
+                    <PopoverTitle>{user?.name}</PopoverTitle>
+                    <PopoverDescription>
+                      <p>{user?.email}</p>
+                    </PopoverDescription>
+                    <Button onClick={handleSignOutButton} variant="destructive">
+                      Sign Out
+                    </Button>
+                  </PopoverHeader>
+                </PopoverContent>
+              </Popover>
+            ) : (
+              <>
+                {accountLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className="text-[13px] font-medium text-neutral-700 transition-colors hover:text-brand lg:text-sm"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </>
+            )}
           </div>
         </nav>
       )}
