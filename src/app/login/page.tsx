@@ -36,8 +36,6 @@ export default function LoginPage() {
     });
 
     if (data) {
-      console.log(data);
-
       redirect("/");
     }
     if (error) {

@@ -5,19 +5,18 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import {
   ArrowLeftIcon,
-  ArrowRightIcon,
   CalendarDaysIcon,
   CheckIcon,
   MapPinIcon,
   StarIcon,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import EditDialogBox from "@/components/EditDialogBox";
 import { IDestination } from "@/app/types/DestinationType";
 import DeleteAlertDialog from "@/components/DeleteAlertDialog";
+import BookNowButtonCard from "@/components/booking/BookNowButtonCard";
 
 
 
@@ -32,11 +31,6 @@ const FALLBACK_HIGHLIGHTS = [
   "Private beach dinner experience",
 ];
 
-const PERKS = [
-  "Free cancellation up to 7 days",
-  "Travel insurance included",
-  "24/7 customer support",
-];
 
 
 const getDestination = cache(async (id: string): Promise<IDestination> => {
@@ -92,8 +86,7 @@ async function DetailSkeleton() {
   );
 }
 
-const formatPrice = (price: IDestination["price"]) =>
-  Number(price).toLocaleString("en-US");
+
 
 async function DestinationDetails({ id }: { id: string }) {
   const destination = await getDestination(id);
@@ -173,43 +166,7 @@ async function DestinationDetails({ id }: { id: string }) {
         </div>
 
         {/* Booking card */}
-        <aside>
-          <div className="rounded-xl border bg-card p-5">
-            <p className="text-xs text-muted-foreground">Starting from</p>
-            <p className="mt-2 text-3xl font-medium text-brand">
-              ${formatPrice(price)}
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">per person</p>
-
-            <Input
-              type="date"
-              aria-label="Departure date"
-              className="mt-4 h-10 bg-muted"
-              defaultValue={departureDate}
-              readOnly
-            />
-
-            <Button
-              size="lg"
-              className="mt-4 w-full bg-brand text-white hover:bg-brand-hover"
-            >
-              Book Now
-              <ArrowRightIcon data-icon="inline-end" className="size-3.5" />
-            </Button>
-          </div>
-
-          <ul className="mt-5 flex flex-col gap-2.5">
-            {PERKS.map((perk) => (
-              <li
-                key={perk}
-                className="flex items-start gap-2 text-xs text-foreground/80"
-              >
-                <CheckIcon className="mt-0.5 size-3.5 shrink-0 text-emerald-600" />
-                {perk}
-              </li>
-            ))}
-          </ul>
-        </aside>
+            <BookNowButtonCard destination={destination} />
       </div>
     </>
   );

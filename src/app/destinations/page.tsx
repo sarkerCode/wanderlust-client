@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { ArrowUpRight, CalendarDays, MapPin, Star } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";

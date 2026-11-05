@@ -94,21 +94,29 @@ export function Navbar() {
               <Popover>
                 <PopoverTrigger
                   render={
-                    <Avatar>
-                      <AvatarImage
-                        referrerPolicy="no-referrer"
-                        src={user?.image as string}
-                      />
-                      <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
-                    </Avatar>
+                    <button
+                      type="button"
+                      className="flex cursor-pointer items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                      aria-label="Open profile menu"
+                    />
                   }
-                />
+                >
+                  <Avatar>
+                    <AvatarImage
+                      referrerPolicy="no-referrer"
+                      src={user?.image as string}
+                    />
+                    <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                </PopoverTrigger>
+
                 <PopoverContent align="start">
                   <PopoverHeader>
                     <PopoverTitle>{user?.name}</PopoverTitle>
                     <PopoverDescription>
                       <p>{user?.email}</p>
                     </PopoverDescription>
+
                     <Button onClick={handleSignOutButton} variant="destructive">
                       Sign Out
                     </Button>
