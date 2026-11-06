@@ -15,12 +15,18 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { redirect } from "next/navigation";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 const DeleteAlertDialog = ({id}: {id: string}) => {
 
     const handleDeleteDestination = async () => {
+
+      const token = await getTokenFromClient();
         const res = await fetch(`http://localhost:8000/destination/${id}`, {
             method: "DELETE",
+            headers: {
+              authorization: `Bearer ${token}`,
+            }
         });
 
         const data = await res.json();

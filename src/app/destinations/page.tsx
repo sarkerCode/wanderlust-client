@@ -34,11 +34,11 @@ function DestinationCard({
   return (
     <article className="group flex flex-col">
       <div className="relative overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
+        
         <Image
           src={imageUrl}
           alt={name}
-          className="aspect-[16/10] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          className="aspect-16/10 w-full object-cover transition-transform duration-300 group-hover:scale-105"
           width={600}
           height={400}
         />
@@ -70,7 +70,7 @@ function DestinationCard({
         </span>
 
         <Link
-          href={`/destinations/${destination._id}`}
+          href={`/destinations/${destination._id ?? destination.id}`}
           className="mt-1.5 inline-flex w-fit items-center gap-1 border-b border-brand pb-0.5 text-xs font-bold tracking-wide text-brand transition-colors hover:border-brand-hover hover:text-brand-hover"
         >
           BOOK NOW
@@ -88,7 +88,7 @@ function DestinationsGridSkeleton() {
       <div className="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, index) => (
           <div key={index} className="flex flex-col">
-            <Skeleton className="aspect-[16/10] w-full" />
+            <Skeleton className="aspect-16/10 w-full" />
             <Skeleton className="mt-3 h-4 w-24" />
             <Skeleton className="mt-2 h-5 w-40" />
             <Skeleton className="mt-2 h-4 w-32" />

@@ -9,6 +9,7 @@ import { BookingCard } from "@/components/booking/booking-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { auth } from "@/lib/auth";
 import { apiUrl } from "@/lib/api";
+import { getTokenFromServer } from "@/lib/getTokenFromServer";
 
 export const metadata: Metadata = {
   title: "My Bookings — Wanderlust",
@@ -18,8 +19,14 @@ export const metadata: Metadata = {
 };
 
 async function getMyBookings(email: string): Promise<Booking[]> {
+
+  const token = await getTokenFromServer();
+
   const res = await fetch(apiUrl(`/my-bookings/${encodeURIComponent(email)}`), {
     cache: "no-store",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
   });
   if (!res.ok) {
     throw new Error(`Failed to fetch bookings: ${res.status}`);

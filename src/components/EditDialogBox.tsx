@@ -23,6 +23,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { IDestination } from "@/app/types/DestinationType";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
+import { redirect } from "next/navigation";
 
 const CATEGORIES = [
   "Beach",
@@ -79,6 +81,11 @@ const EditDialogBox = ({ destination }: { destination: IDestination }) => {
     event.preventDefault();
     setSaving(true);
 
+    const token = await getTokenFromClient();
+
+    console.log("JWT Token:", token);
+console.log("Destination ID:", destination._id ?? destination.id);
+
     try {
       const res = await fetch(
         `http://localhost:8000/destination/${destination._id ?? destination.id}`,
@@ -86,6 +93,7 @@ const EditDialogBox = ({ destination }: { destination: IDestination }) => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             ...form,
@@ -104,6 +112,7 @@ const EditDialogBox = ({ destination }: { destination: IDestination }) => {
       console.error(error);
     } finally {
       setSaving(false);
+      redirect(`/destinations/${destination._id ?? destination.id}`);
     }
   };
 

@@ -10,6 +10,9 @@ import { CancelBookingDialog } from "./cancel-booking-dialog";
 
 export function BookingCard({ booking }: { booking: Booking }) {
   const id = bookingDisplayId(booking);
+   const dbId = booking._id ?? booking.id ?? id;
+  const destinationName =
+    booking.destinationName || booking.name || "Untitled Destination";
   const detailHref = booking.destinationId
     ? `/destinations/${booking.destinationId}`
     : "/destinations";
@@ -20,11 +23,11 @@ export function BookingCard({ booking }: { booking: Booking }) {
       aria-labelledby={`booking-title-${id}`}
       className="flex flex-col gap-5 rounded-xl border bg-card p-4 sm:flex-row sm:items-center sm:p-5"
     >
-      <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden rounded-lg sm:aspect-auto sm:h-32 sm:w-48">
+      <div className="relative aspect-16/10 w-full shrink-0 overflow-hidden rounded-lg sm:aspect-auto sm:h-32 sm:w-48">
         {booking.imageUrl ? (
           <Image
             src={booking.imageUrl}
-            alt={booking.name}
+            alt={destinationName}
             fill
             sizes="(min-width: 640px) 192px, 100vw"
             className="object-cover"
@@ -42,13 +45,13 @@ export function BookingCard({ booking }: { booking: Booking }) {
               id={`booking-title-${id}`}
               className="mt-2 truncate text-xl font-semibold tracking-tight text-foreground"
             >
-              {booking.name}
+              {destinationName}
             </h3>
           </div>
 
           <div className="flex shrink-0 items-center gap-2">
             {isCancelled ? null : (
-              <CancelBookingDialog bookingId={id} bookingName={booking.name} />
+              <CancelBookingDialog bookingId={dbId} bookingName={destinationName} />
             )}
             <Button
               size="sm"
@@ -56,7 +59,11 @@ export function BookingCard({ booking }: { booking: Booking }) {
               nativeButton={false}
               className="bg-brand hover:bg-brand-hover"
             >
-              <Eye data-icon="inline-start" className="size-3.5" aria-hidden="true" />
+              <Eye
+                data-icon="inline-start"
+                className="size-3.5"
+                aria-hidden="true"
+              />
               View
             </Button>
           </div>

@@ -17,6 +17,7 @@ import EditDialogBox from "@/components/EditDialogBox";
 import { IDestination } from "@/app/types/DestinationType";
 import DeleteAlertDialog from "@/components/DeleteAlertDialog";
 import BookNowButtonCard from "@/components/booking/BookNowButtonCard";
+import { getTokenFromServer } from "@/lib/getTokenFromServer";
 
 
 
@@ -34,7 +35,17 @@ const FALLBACK_HIGHLIGHTS = [
 
 
 const getDestination = cache(async (id: string): Promise<IDestination> => {
-  const res = await fetch(`http://localhost:8000/destination/${id}`);
+
+ const token = await getTokenFromServer();
+
+
+  const res = await fetch(`http://localhost:8000/destination/${id}`, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    }
+  });
+
+  
 
   if (!res.ok) {
     if (res.status === 404) {
@@ -44,9 +55,11 @@ const getDestination = cache(async (id: string): Promise<IDestination> => {
     throw new Error(`Failed to fetch destination: ${res.status}`);
   }
 
-  const data = await res.json();
+  const result = await res.json();
+  console.log(result);
+  
 
-  return data.result;
+  return result.result;
 });
 
 
@@ -76,7 +89,7 @@ console.log("Image URL:", destination.imageUrl);
 async function DetailSkeleton() {
   return (
     <div aria-busy="true" aria-label="Loading destination">
-      <Skeleton className="aspect-[21/8] w-full" />
+      <Skeleton className="aspect-21/8 w-full" />
       <Skeleton className="mt-8 h-8 w-40" />
       <Skeleton className="mt-3 h-5 w-32" />
       <Skeleton className="mt-6 h-6 w-24" />
@@ -93,20 +106,18 @@ async function DestinationDetails({ id }: { id: string }) {
   const {
     name,
     country,
-    price,
     duration,
     imageUrl,
     description,
     rating = 4.9,
     reviews = 234,
     highlights = FALLBACK_HIGHLIGHTS,
-    departureDate,
   } = destination;
 
   return (
     <>
       {/* Hero image */}
-      <div className="relative mt-6 aspect-[21/8] w-full overflow-hidden rounded-md">
+      <div className="relative mt-6 aspect-21/8 w-full overflow-hidden rounded-md">
         <Image
           src={imageUrl}
           alt={`${name} — ${country}`}

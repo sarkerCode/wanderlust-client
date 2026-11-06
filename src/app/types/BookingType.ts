@@ -5,6 +5,7 @@ export type Booking = {
   id?: string;
   bookingId?: string;
   name: string;
+  destinationName?: string;
   country?: string;
   price: number | string;
   departureDate?: string;

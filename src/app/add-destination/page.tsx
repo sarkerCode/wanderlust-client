@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 const CATEGORIES = [
   "Beach",
@@ -48,21 +49,24 @@ export default function AddDestinationPage() {
       setForm((prev) => ({ ...prev, [field]: event.target.value }));
     };
 
-  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const token = await getTokenFromClient();
 
     const res = await fetch("http://localhost:8000/add-destination", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(form),
     });
 
-    const data = await res.json()
+    const result = await res.json();
 
-    console.log(data);
-    
+    console.log(result);
+
     // console.log("New travel package:", form);
     setForm(initialForm);
   };

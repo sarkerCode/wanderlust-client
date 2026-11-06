@@ -1,6 +1,7 @@
 "use client";
 import { IDestination } from "@/app/types/DestinationType";
 import { useSession } from "@/lib/auth-client";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 import { Button, Input } from "@base-ui/react";
 import { ArrowRightIcon, CheckIcon } from "lucide-react";
 
@@ -20,23 +21,44 @@ const BookNowButtonCard = ({ destination }: { destination: IDestination }) => {
 
   const handleBookNow = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    
     const formData = new FormData(e.currentTarget);
     const departureDate = formData.get("departureDate") as string;
     // const departureDate = e.target.departureDate.value
+    
+    // const data = {
+    //   userName: user?.name,
+    //     userEmail: user?.email,
+    //     image: user?.image,
+    //     ...destination,
+    //     departureDate: departureDate,
+    //     bookingDate: new Date().toISOString(),
+    // }
 
     const data = {
-        userName: user?.name,
-        userEmail: user?.email,
-        image: user?.image,
-        ...destination,
-        departureDate: departureDate,
-        bookingDate: new Date().toISOString(),
-    }
+  userName: user?.name,
+  userEmail: user?.email,
+  image: user?.image,
 
+  destinationId: destination._id,
+  destinationName: destination.name,
+  country: destination.country,
+  category: destination.category,
+  price: destination.price,
+  duration: destination.duration,
+  imageUrl: destination.imageUrl,
+
+  departureDate,
+  bookingDate: new Date().toISOString(),
+};
+
+      const token = await getTokenFromClient();
     const res = await fetch(`http://localhost:8000/bookings`, {
         method: 'POST',
         headers: {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(data)
     })

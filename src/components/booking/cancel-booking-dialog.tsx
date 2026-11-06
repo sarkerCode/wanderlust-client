@@ -17,6 +17,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
+import { apiUrl } from "@/lib/api";
 
 
 export function CancelBookingDialog({
@@ -27,6 +29,7 @@ export function CancelBookingDialog({
   bookingName: string;
 }) {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,9 +39,12 @@ export function CancelBookingDialog({
     setIsCancelling(true);
     setError(null);
     try {
-      const res = await fetch(`http://localhost:8000/my-bookings/${bookingId}`, {
-        method: "DELETE"
-     
+      const token = await getTokenFromClient();
+      const res = await fetch(apiUrl(`/my-bookings/${bookingId}`), {
+        method: "DELETE",
+        headers: {
+          authorization: `Bearer ${token}`,
+        }
       });
       if (!res.ok) {
         throw new Error(`Failed to cancel booking: ${res.status}`);
@@ -52,7 +58,7 @@ export function CancelBookingDialog({
   }
 
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger
         render={
           <Button
